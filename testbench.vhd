@@ -45,6 +45,16 @@ process (clk) begin
 	               else
 							report "test 2 : error";
 	               end if;
+		when 50 => if(conv_integer(writedata) = 84) then
+			            report "test 4 done";
+	               else
+							report "test 4 : error";
+	               end if;
+		when 40 => if(conv_integer(writedata) = 84) then
+						report "test 3 done";
+					else
+						report "test 3: error"
+					end if;
 	    when others => report "";
 	  end case;       
 	end if;

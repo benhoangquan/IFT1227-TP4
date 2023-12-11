@@ -33,7 +33,17 @@ begin
 		mem(15) := X"08000011";	--	    j 	end			   # goto end
 		mem(16) := X"20020001";	--	    addi $v0, $0, 1
 		mem(17) := X"ac02003C";	--end: sw 	$v0, 60($0) 	# $v0(2) write M[60]; M[60]=7; #test 2
-		for ii in 18 to 63 loop
+		-- opcode: 111111, rs: 00000, rt: 00010, imm: 0000000000001100
+		mem(18) := X"FC02000C"; -- auipc $v0, 12
+		-- opcode: 101011, rs: 00000, rt: 00010, imm: 0000000000101000
+		mem(19) := X"AC020028"; -- sw $v0, 40($0) # M[40]= 12 + 72 = 84 #test 3
+		-- opcode: 000011, addr 00000000000000000001011000 
+		mem(20) := X"0C000058"; -- jal end2
+		-- opcode: 001000, rs: 00000, rt: 11111, imm: 0000000000000000
+		mem(21) := X"201F0000"; -- addi $ra, $0, 0 opération qui fait échouer le test de jal
+		-- opcode: 101011, rs: 00000, rt: 11111, imm: 0000000000110010
+		mem(22) := X"AC1F0032"; --end2: sw $ra, 50($0) # M[50] = 80 + 4 = 84 # test 4
+		for ii in 23 to 63 loop
         mem(ii) := X"00000000";
       end loop;  -- ii
 	-- read memory
