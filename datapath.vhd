@@ -61,6 +61,7 @@ architecture struct of datapath is
 	signal writereg: STD_LOGIC_VECTOR (4 downto 0);
 	signal pcjump, pcnext, pcnextbr, pcplus4, pcbranch: STD_LOGIC_VECTOR (31 downto 0);
 	signal signimm, signimmsh: STD_LOGIC_VECTOR (31 downto 0);
+	signal srcaint: STD_LOGIC_VECTOR (31 downto 0);
 	signal srca, srcb, result: STD_LOGIC_VECTOR (31 downto 0);
 	
 begin
@@ -73,11 +74,12 @@ begin
 	pcbrmux: mux2 generic map(32) port map(pcplus4, pcbranch, pcsrc, pcnextbr);
 	pcmux: mux2 generic map(32) port map(pcnextbr, pcjump, jump, pcnext);
 -- register file logic
-	rf: regfile port map(clk, regwrite, instr(25 downto 21),instr(20 downto 16), writereg, result, srca, writedata);
-	wrmux: mux2 generic map(5) port map(instr(20 downto 16),instr(15 downto 11), regdst, writereg);
-	resmux: mux2 generic map(32) port map(aluout, readdata, memtoreg, result);
+	rf: regfile port map(clk, regwrite, instr(25 downto 21),instr(20 downto 16), writereg, result, srcaint, writedata);
+	wrmux: mux4 generic map(5) port map("11111",instr(20 downto 16),instr(15 downto 11),"-----", regdst, writereg);
+	resmux: mux4 generic map(32) port map(pcplus4, aluout, readdata, "-----", memtoreg, result);
 	se: signext port map(instr(15 downto 0), signimm);
 -- ALU logic
+	srcamux: mux2 generic map (32) port map(srcaint, pc, alusrcauipc, srca)
 	srcbmux: mux2 generic map (32) port map(writedata, signimm, alusrc, srcb);
 	mainalu: alu port map(srca, srcb, alucontrol, zero, aluout);
 end;

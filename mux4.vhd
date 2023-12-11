@@ -2,11 +2,10 @@ library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
 entity mux4 is
- port(
-    d0,d1,d2,d3 : in STD_LOGIC;
-    s: in STD_LOGIC_VECTOR (1 downto 0);
-    z: out STD_LOGIC
-  );
+	generic (width: integer);
+	port(d0,d1,d2,d3 : in STD_LOGIC_VECTOR (width-1 downto 0);
+    	s: in STD_LOGIC_VECTOR (1 downto 0);
+    	z: out STD_LOGIC_VECTOR (width-1 downto 0));
 end mux4;
 
 architecture synth of mux4 is
