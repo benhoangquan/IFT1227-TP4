@@ -3,8 +3,11 @@ IEEE.STD_LOGIC_ARITH.all;
 
 entity datapath is -- MIPS datapath
 	port(	clk, reset: in STD_LOGIC;
-			memtoreg, pcsrc: in STD_LOGIC;
-			alusrc, regdst: in STD_LOGIC;
+			memtoreg: in STD_LOGIC_VECTOR (1 downto 0);
+			pcsrc: in STD_LOGIC;
+			alusrc: in STD_LOGIC;
+			alusrcauipc: in STD_LOGIC;
+			regdst: in STD_LOGIC_VECTOR (1 downto 0);
 			regwrite, jump: in STD_LOGIC;
 			alucontrol: in STD_LOGIC_VECTOR (2 downto 0);
 			zero: out STD_LOGIC;
@@ -48,6 +51,11 @@ architecture struct of datapath is
 	component mux2 generic (width: integer);
 		port(	d0, d1: in STD_LOGIC_VECTOR (width-1 downto 0);
 				s: in STD_LOGIC;
+				y: out STD_LOGIC_VECTOR (width-1 downto 0));
+	end component;
+	component mux4 generic (width: integer);
+		port(	d0, d1, d2, d3: in STD_LOGIC_VECTOR (width-1 downto 0);
+				s: in STD_LOGIC_VECTOR (1 downto 0);
 				y: out STD_LOGIC_VECTOR (width-1 downto 0));
 	end component;
 	signal writereg: STD_LOGIC_VECTOR (4 downto 0);
